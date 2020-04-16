@@ -217,7 +217,7 @@
   [Official documentation.](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)
 
   **Backend communication**</br>
-  Caddy when used as reverse proxy functions as a TLS termination proxy.</br> 
+  Caddy when used as a reverse proxy functions as a [TLS termination proxy](https://www.youtube.com/watch?v=H0bkLsUe3no).</br> 
   Https encrypted tunel ends with it, and the communication with other containers
   within the docker network is usually unencrypted.
 
