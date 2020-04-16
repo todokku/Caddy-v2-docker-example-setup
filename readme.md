@@ -216,18 +216,20 @@
 
   [Official documentation.](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)
 
-  **Disabling tls check**
-
+  **Backend communication**</br>
   Caddy when used as reverse proxy functions as a TLS termination proxy.</br> 
   Https encrypted tunel ends with it, and the communication with other containers
-  within the docker network is unencrypted.
+  within the docker network is usually unencrypted.
 
-  Some docker images might come with their own certificates managment
-  and would listen on port 443, tls encrypted tunel would go all the way to the running container.
-  Like [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud/)
+  But some docker images come with their own certificates managment out of the box
+  and would expect to communicate through their port 443.
+  Like [linuxserver/nextcloud.](https://hub.docker.com/r/linuxserver/nextcloud/)
+  This would not work as they would not have valid trusted certificate.
   
-  To turn off caddies tls check add `transport http` directive under proxy block,
-  and within it set `tls_insecure_skip_verify`
+  `transport` sub-directive section tells caddy how to communicate with the backend.
+  Setting port to 443 makes it use https.
+  Setting `tls_insecure_skip_verify` makes it trust whatever certificate
+  is coming from the backend.
 
   ```
   nextcloud.{$MY_DOMAIN} {
@@ -240,11 +242,9 @@
   }
   ```
 
-  **HSTS and redirects**
-
-  Another example with nextcloud is its need to do to redirects
+  **HSTS and redirects**</br>
+  Another example with nextcloud as it needs to do to redirects
   or apply [HTTP Strict Transport Security (HSTS)](https://www.youtube.com/watch?v=kYhMnw4aJTw).</br> 
-  This example is for the official nextcloud image with https managed by caddy.</br>
   We can see HSTS enabled with max age one year and the redirects that nextcloud requires.
 
   ```
@@ -256,9 +256,8 @@
   }
   ```
 
-  **gzip and headers**
-
-  Bitwarden password manager comes with its reverse proxy
+  **gzip and headers**</br>
+  Another example is Bitwarden password manager, which comes with its reverse proxy
   [recommendations](https://github.com/dani-garcia/bitwarden_rs/wiki/Proxy-examples).
   
   `encode gzip` enables compression.
@@ -301,8 +300,7 @@
   }
   ```
 
-  **logging**
-
+  **logging**</br>
   [Official documentation.](https://caddyserver.com/docs/caddyfile/directives/log)</br>
   If logs of http requests for specific site are desired
 
